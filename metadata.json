@@ -1,0 +1,6 @@
+{
+  "name": "PinkSheep — Sun'iy intellektli ta'lim platformasi",
+  "description": "Ingliz tili insholarini AI bilan tahlil qilish, akademik lug'at va qiziqarli o'yinlar orqali katta imkoniyatlarga erishing.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
