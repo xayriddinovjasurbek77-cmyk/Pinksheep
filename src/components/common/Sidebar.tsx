@@ -1,6 +1,8 @@
 import React from 'react';
 import { useApp, ActiveTab } from '../../context/AppContext';
+import { useLanguage } from '../../i18n/LanguageContext';
 import { PinkSheepLogo, PinkSheepMascot } from './PinkSheepMascot';
+import { LanguageSwitcher } from './LanguageSwitcher';
 import {
   LayoutGrid,
   PenLine,
@@ -21,17 +23,18 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, setMobileOpen }) => {
   const { activeTab, setActiveTab, user, logoutUser } = useApp();
+  const { t } = useLanguage();
 
   // Exactly the 8 main navigation items + Chiqish at bottom
   const navItems: { id: ActiveTab; label: string; icon: React.ReactNode }[] = [
-    { id: 'dashboard', label: 'Bosh sahifa', icon: <LayoutGrid className="w-5 h-5" /> },
-    { id: 'essay-lab', label: 'Essay Lab', icon: <PenLine className="w-5 h-5" /> },
-    { id: 'games', label: 'O‘yinlar', icon: <Gamepad2 className="w-5 h-5" /> },
-    { id: 'leaderboard', label: 'Reyting', icon: <Trophy className="w-5 h-5" /> },
-    { id: 'profile', label: 'Profil', icon: <User className="w-5 h-5" /> },
-    { id: 'essay-history', label: 'Insholar tarixi', icon: <BookOpen className="w-5 h-5" /> },
-    { id: 'pink-coins', label: 'Pink Coin', icon: <Coins className="w-5 h-5" /> },
-    { id: 'settings', label: 'Sozlamalar', icon: <Settings className="w-5 h-5" /> },
+    { id: 'dashboard', label: t('nav.home'), icon: <LayoutGrid className="w-5 h-5" /> },
+    { id: 'essay-lab', label: t('nav.essayLab'), icon: <PenLine className="w-5 h-5" /> },
+    { id: 'games', label: t('nav.games'), icon: <Gamepad2 className="w-5 h-5" /> },
+    { id: 'leaderboard', label: t('nav.leaderboard'), icon: <Trophy className="w-5 h-5" /> },
+    { id: 'profile', label: t('nav.profile'), icon: <User className="w-5 h-5" /> },
+    { id: 'essay-history', label: t('nav.essayHistory'), icon: <BookOpen className="w-5 h-5" /> },
+    { id: 'pink-coins', label: t('nav.pinkCoins'), icon: <Coins className="w-5 h-5" /> },
+    { id: 'settings', label: t('nav.settings'), icon: <Settings className="w-5 h-5" /> },
   ];
 
   const handleNavClick = (tab: ActiveTab) => {
@@ -109,6 +112,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, setMobileOpen }) =
 
         {/* User Mini Profile Card at Bottom */}
         <div className="p-4 border-t border-[#FAF0F5]">
+          <LanguageSwitcher variant="sidebar" className="mb-3" />
+
           <div className="p-3.5 rounded-2xl bg-[#FFF8FC] border border-[#FCE7F3] space-y-3">
             <div
               onClick={() => handleNavClick('profile')}
@@ -120,7 +125,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, setMobileOpen }) =
                   {user.username}
                 </p>
                 <p className="text-[11px] font-medium text-[#85818A]">
-                  Level {user.level} · {user.level === 1 ? "Oddiy Qo'y" : user.level === 2 ? "Ijodkor Qo'y" : "Afsonaviy Qo'y"}
+                  {t('common.level')} {user.level} · {user.level === 1 ? t('landing.level1Title') : user.level === 2 ? t('landing.level2Title') : t('landing.level3Title')}
                 </p>
               </div>
             </div>
@@ -134,16 +139,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ mobileOpen, setMobileOpen }) =
                   Ⓟ
                 </div>
                 <span>{user.pinkCoins}</span>
-                <span className="text-[10px] text-[#85818A] uppercase tracking-wider font-semibold">Tanga</span>
+                <span className="text-[10px] text-[#85818A] uppercase tracking-wider font-semibold">{t('common.coins')}</span>
               </div>
 
               <button
                 onClick={logoutUser}
-                className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#85818A] hover:text-[#EC008C] transition-colors"
-                title="Chiqish"
+                className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#85818A] hover:text-[#EC008C] transition-colors cursor-pointer"
+                title={t('common.logout')}
               >
                 <LogOut className="w-3.5 h-3.5" />
-                <span>Chiqish</span>
+                <span>{t('common.logout')}</span>
               </button>
             </div>
           </div>

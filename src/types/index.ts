@@ -19,6 +19,8 @@ export interface SheepAvatar {
   bgHex: string;
 }
 
+export type AppLanguage = 'uz' | 'en' | 'ru';
+
 export interface UserProfile {
   id: string;
   username: string;
@@ -31,6 +33,7 @@ export interface UserProfile {
   joinedDate: string;
   streakDays: number;
   isAuthenticated: boolean;
+  preferredLanguage?: AppLanguage;
 }
 
 export interface UserStats {

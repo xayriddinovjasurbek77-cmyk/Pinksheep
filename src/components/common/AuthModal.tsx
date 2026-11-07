@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
+import { useLanguage } from '../../i18n/LanguageContext';
 import { PinkSheepMascot } from './PinkSheepMascot';
-import { X, Mail, Lock, User, Eye, EyeOff, Sparkles, ArrowRight, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { X, Mail, Lock, User, Eye, EyeOff, ArrowRight, ShieldCheck } from 'lucide-react';
 
 export const AuthModal: React.FC = () => {
   const {
@@ -11,8 +12,8 @@ export const AuthModal: React.FC = () => {
     setAuthMode,
     loginUser,
     registerUser,
-    setActiveTab
   } = useApp();
+  const { t, language } = useLanguage();
 
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -28,17 +29,17 @@ export const AuthModal: React.FC = () => {
     setErrorMsg(null);
 
     if (!email.trim() || !email.includes('@')) {
-      setErrorMsg('Iltimos, to‘g‘ri elektron pochta manzilini kiriting.');
+      setErrorMsg(t('auth.errorInvalidEmail'));
       return;
     }
 
     if (password.length < 6) {
-      setErrorMsg('Parol kamida 6 ta belgidan iborat bo‘lishi lozim.');
+      setErrorMsg(t('auth.errorShortPass'));
       return;
     }
 
     if (authMode === 'register' && !username.trim()) {
-      setErrorMsg('Iltimos, to‘liq ismingiz yoki taxallusingizni kiriting.');
+      setErrorMsg(t('auth.errorMissingName'));
       return;
     }
 
@@ -48,12 +49,12 @@ export const AuthModal: React.FC = () => {
       if (authMode === 'register') {
         const res = await registerUser(username, email, password);
         if (!res.success) {
-          setErrorMsg(res.error || 'Ro‘yxatdan o‘tishda xatolik yuz berdi.');
+          setErrorMsg(res.error || t('auth.errorGeneric'));
         }
       } else {
         const res = await loginUser(email, password);
         if (!res.success) {
-          setErrorMsg(res.error || 'Kirishda xatolik yuz berdi.');
+          setErrorMsg(res.error || t('auth.errorGeneric'));
         }
       }
     } finally {
@@ -76,12 +77,12 @@ export const AuthModal: React.FC = () => {
         <div className="text-center space-y-2">
           <PinkSheepMascot size="lg" className="mx-auto shadow-sm" />
           <h2 className="text-2xl font-extrabold text-[#242124] tracking-tight">
-            Pink<span className="text-[#EC008C]">Sheep</span> Ta'lim Portali
+            Pink<span className="text-[#EC008C]">Sheep</span> {t('auth.welcomeTitle')}
           </h2>
           <p className="text-xs text-[#85818A] max-w-xs mx-auto">
             {authMode === 'register'
-              ? 'Yangi hisob oching va darhol 50 Pink Coin start bonusiga ega bo‘ling'
-              : 'Akademik insholar studiyasi va o‘yinlarga xush kelibsiz'}
+              ? (language === 'uz' ? 'Yangi hisob oching va darhol 50 Pink Coin start bonusiga ega bo‘ling' : language === 'ru' ? 'Создайте аккаунт и получите 50 Pink Coins бонуса' : 'Create an account and get 50 Pink Coins bonus')
+              : t('auth.welcomeSubtitle')}
           </p>
         </div>
 
@@ -96,7 +97,7 @@ export const AuthModal: React.FC = () => {
                 : 'text-[#85818A] hover:text-[#242124]'
             }`}
           >
-            Kirish
+            {t('auth.loginTab')}
           </button>
           <button
             type="button"
@@ -107,7 +108,7 @@ export const AuthModal: React.FC = () => {
                 : 'text-[#85818A] hover:text-[#242124]'
             }`}
           >
-            Ro‘yxatdan o‘tish
+            {t('auth.registerTab')}
           </button>
         </div>
 
@@ -123,7 +124,7 @@ export const AuthModal: React.FC = () => {
           {authMode === 'register' && (
             <div className="space-y-1">
               <label className="block text-[11px] font-extrabold text-[#85818A] uppercase tracking-wider">
-                Ism yoki taxallus
+                {t('auth.usernameLabel')}
               </label>
               <div className="relative">
                 <User className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -131,7 +132,7 @@ export const AuthModal: React.FC = () => {
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder="masalan: Azizbek Otabekov"
+                  placeholder={t('auth.usernamePlaceholder')}
                   className="w-full pl-10 pr-4 py-3 rounded-2xl bg-[#FFF8FC] border border-[#FCE7F3] text-xs font-semibold text-[#242124] focus:outline-none focus:border-[#EC008C]"
                 />
               </div>
@@ -140,7 +141,7 @@ export const AuthModal: React.FC = () => {
 
           <div className="space-y-1">
             <label className="block text-[11px] font-extrabold text-[#85818A] uppercase tracking-wider">
-              Elektron pochta
+              {t('auth.emailLabel')}
             </label>
             <div className="relative">
               <Mail className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -148,7 +149,7 @@ export const AuthModal: React.FC = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="talaba@example.com"
+                placeholder={t('auth.emailPlaceholder')}
                 className="w-full pl-10 pr-4 py-3 rounded-2xl bg-[#FFF8FC] border border-[#FCE7F3] text-xs font-semibold text-[#242124] focus:outline-none focus:border-[#EC008C]"
               />
             </div>
@@ -157,9 +158,9 @@ export const AuthModal: React.FC = () => {
           <div className="space-y-1">
             <div className="flex items-center justify-between">
               <label className="text-[11px] font-extrabold text-[#85818A] uppercase tracking-wider">
-                Parol
+                {t('auth.passwordLabel')}
               </label>
-              <span className="text-[10px] text-[#85818A]">kamida 6 ta belgi</span>
+              <span className="text-[10px] text-[#85818A]">{t('auth.minChars')}</span>
             </div>
             <div className="relative">
               <Lock className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -167,7 +168,7 @@ export const AuthModal: React.FC = () => {
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
+                placeholder={t('auth.passwordPlaceholder')}
                 className="w-full pl-10 pr-10 py-3 rounded-2xl bg-[#FFF8FC] border border-[#FCE7F3] text-xs font-semibold text-[#242124] focus:outline-none focus:border-[#EC008C]"
               />
               <button
@@ -185,7 +186,7 @@ export const AuthModal: React.FC = () => {
             disabled={loading}
             className="w-full py-3.5 bg-[#EC008C] hover:bg-[#d4007d] disabled:opacity-50 text-white text-xs font-bold rounded-2xl shadow-lg shadow-[#EC008C]/25 transition-all mt-2 active:scale-95 flex items-center justify-center gap-2"
           >
-            <span>{loading ? 'Tekshirilmoqda...' : authMode === 'register' ? 'Ro‘yxatdan o‘tish' : 'Tizimga kirish'}</span>
+            <span>{loading ? t('auth.submitting') : authMode === 'register' ? t('auth.submitRegister') : t('auth.submitLogin')}</span>
             <ArrowRight className="w-4 h-4" />
           </button>
         </form>
@@ -193,7 +194,7 @@ export const AuthModal: React.FC = () => {
         {/* Security badge note */}
         <div className="pt-2 flex items-center justify-center gap-2 text-[11px] text-[#85818A] border-t border-[#FAF0F5]">
           <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-          <span>Xavfsiz SHA-256 shifrlangan autentifikatsiya tizimi</span>
+          <span>{t('auth.encryptedNote')}</span>
         </div>
       </div>
     </div>

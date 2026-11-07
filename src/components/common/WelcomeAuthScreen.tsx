@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
+import { useLanguage } from '../../i18n/LanguageContext';
 import { PinkSheepMascot } from './PinkSheepMascot';
-import { Mail, Lock, User, Eye, EyeOff, Sparkles, ArrowRight, ArrowLeft, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { LanguageSwitcher } from './LanguageSwitcher';
+import { Mail, Lock, User, Eye, EyeOff, ArrowRight, ArrowLeft, ShieldCheck } from 'lucide-react';
 
 export const WelcomeAuthScreen: React.FC = () => {
   const { loginUser, registerUser, setActiveTab } = useApp();
+  const { t } = useLanguage();
 
   const [mode, setMode] = useState<'login' | 'register'>('login');
   const [username, setUsername] = useState('');
@@ -19,17 +22,17 @@ export const WelcomeAuthScreen: React.FC = () => {
     setErrorMsg(null);
 
     if (!email.trim() || !email.includes('@')) {
-      setErrorMsg('Iltimos, to‘g‘ri elektron pochta manzilini kiriting.');
+      setErrorMsg(t('auth.errorInvalidEmail'));
       return;
     }
 
     if (password.length < 6) {
-      setErrorMsg('Parol kamida 6 ta belgidan iborat bo‘lishi lozim.');
+      setErrorMsg(t('auth.errorShortPass'));
       return;
     }
 
     if (mode === 'register' && !username.trim()) {
-      setErrorMsg('Iltimos, to‘liq ismingiz yoki taxallusingizni kiriting.');
+      setErrorMsg(t('auth.errorMissingName'));
       return;
     }
 
@@ -38,12 +41,12 @@ export const WelcomeAuthScreen: React.FC = () => {
       if (mode === 'register') {
         const res = await registerUser(username, email, password);
         if (!res.success) {
-          setErrorMsg(res.error || 'Ro‘yxatdan o‘tishda xatolik yuz berdi.');
+          setErrorMsg(res.error || t('auth.errorGeneric'));
         }
       } else {
         const res = await loginUser(email, password);
         if (!res.success) {
-          setErrorMsg(res.error || 'Kirishda xatolik yuz berdi.');
+          setErrorMsg(res.error || t('auth.errorGeneric'));
         }
       }
     } finally {
@@ -57,11 +60,16 @@ export const WelcomeAuthScreen: React.FC = () => {
       <div className="absolute top-6 left-6">
         <button
           onClick={() => setActiveTab('landing')}
-          className="inline-flex items-center gap-1.5 px-4 py-2 bg-white rounded-full border border-[#FCE7F3] text-xs font-bold text-[#85818A] hover:text-[#EC008C] shadow-xs transition-colors"
+          className="inline-flex items-center gap-1.5 px-4 py-2 bg-white rounded-full border border-[#FCE7F3] text-xs font-bold text-[#85818A] hover:text-[#EC008C] shadow-xs transition-colors cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Bosh sahifaga qaytish</span>
+          <span>{t('common.backToLanding')}</span>
         </button>
+      </div>
+
+      {/* Language Switcher in top right corner */}
+      <div className="absolute top-6 right-6">
+        <LanguageSwitcher variant="header" />
       </div>
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center space-y-3">
@@ -73,10 +81,10 @@ export const WelcomeAuthScreen: React.FC = () => {
         </div>
 
         <h1 className="text-3xl font-extrabold text-[#242124] tracking-tight">
-          Pink<span className="text-[#EC008C]">Sheep</span> Ta'lim Portali
+          Pink<span className="text-[#EC008C]">Sheep</span> {t('auth.welcomeTitle')}
         </h1>
         <p className="text-xs sm:text-sm text-[#85818A] max-w-sm mx-auto">
-          Insholaringizni AI orqali tekshirish, o‘yinlar o‘ynash va reytingda qatnashish uchun hisobingizga kiring.
+          {t('auth.welcomeSubtitle')}
         </p>
       </div>
 

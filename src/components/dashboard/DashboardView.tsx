@@ -1,5 +1,6 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
+import { useLanguage } from '../../i18n/LanguageContext';
 import {
   PenLine,
   BookOpen,
@@ -37,12 +38,13 @@ export const DashboardView: React.FC = () => {
     progressPercent,
     coinsNeededForNextLevel
   } = useApp();
+  const { t, language } = useLanguage();
 
   // Prepare chart data for essay scores
   const scoreTrendData = essays
     .filter(e => e.score !== undefined)
     .map((e, idx) => ({
-      name: `Insho ${idx + 1}`,
+      name: `${language === 'uz' ? 'Insho' : language === 'ru' ? 'Эссе' : 'Essay'} ${idx + 1}`,
       title: e.title,
       score: e.score,
     }));
@@ -57,33 +59,33 @@ export const DashboardView: React.FC = () => {
   // If coin history is short, add points for visual elegance
   const displayCoinData = coinHistoryData.length > 0 ? coinHistoryData : [
     { name: 'Start', balance: 50 },
-    { name: 'Faollik', balance: 55 },
-    { name: 'Insho', balance: 75 },
-    { name: 'Tahlil', balance: 85 },
-    { name: 'O\'yin', balance: 95 },
-    { name: 'G\'alaba', balance: 105 },
+    { name: language === 'uz' ? 'Faollik' : language === 'ru' ? 'Активность' : 'Activity', balance: 55 },
+    { name: language === 'uz' ? 'Insho' : language === 'ru' ? 'Эссе' : 'Essay', balance: 75 },
+    { name: language === 'uz' ? 'Tahlil' : language === 'ru' ? 'Анализ' : 'Analysis', balance: 85 },
+    { name: language === 'uz' ? 'O‘yin' : language === 'ru' ? 'Игра' : 'Game', balance: 95 },
+    { name: language === 'uz' ? 'G‘alaba' : language === 'ru' ? 'Победа' : 'Victory', balance: 105 },
   ];
 
   return (
     <div className="space-y-8 text-left pb-12">
-      {/* Dashboard Top Header (Matches Screenshot 6) */}
+      {/* Dashboard Top Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <span className="text-xs font-extrabold tracking-wider text-[#EC008C] uppercase">
-            Dashboard
+            {t('nav.home')}
           </span>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-[#242124] tracking-tight">
-            Xush kelibsiz, {user.username}!
+            {t('dashboard.welcomeBack', { name: user.username })}!
           </h1>
           <p className="text-sm text-[#85818A] mt-0.5">
-            Yozish davomiyligi, tangalaringiz va keyingi qadam — barchasi bir joyda.
+            {t('dashboard.tagline')}
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#FFF0F7] rounded-full border border-[#FCE7F3] text-xs font-semibold text-[#242124]">
             <span className="w-2 h-2 rounded-full bg-emerald-500" />
-            <span>Online</span>
+            <span>{t('common.online')}</span>
           </div>
 
           <button
@@ -91,12 +93,12 @@ export const DashboardView: React.FC = () => {
             className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#EC008C] hover:bg-[#d4007d] text-white text-xs font-bold rounded-full shadow-md shadow-[#EC008C]/25 transition-all hover:shadow-lg active:scale-95"
           >
             <PenLine className="w-3.5 h-3.5" />
-            <span>Insho yozish</span>
+            <span>{t('common.startWriting')}</span>
           </button>
         </div>
       </div>
 
-      {/* 4 Statistics Cards (Matches Screenshot 6) */}
+      {/* 4 Statistics Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Pink Coins Card */}
         <div
@@ -105,7 +107,7 @@ export const DashboardView: React.FC = () => {
         >
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-extrabold uppercase tracking-wider text-white/90">
-              Pink Coin balansi
+              {t('dashboard.pinkCoinsCard')}
             </span>
             <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white text-xs font-bold">
               Ⓟ
@@ -117,7 +119,7 @@ export const DashboardView: React.FC = () => {
             </span>
           </div>
           <div className="mt-4 flex items-center gap-1 text-xs font-medium text-white/80 hover:text-white">
-            <span>Tranzaksiyalar tarixi</span>
+            <span>{t('dashboard.txHistory')}</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
           </div>
         </div>
@@ -129,7 +131,7 @@ export const DashboardView: React.FC = () => {
         >
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#85818A]">
-              Yozilgan insholar
+              {t('dashboard.completedEssaysCard')}
             </span>
             <div className="w-8 h-8 rounded-xl bg-[#FFF0F7] flex items-center justify-center text-[#EC008C]">
               <BookOpen className="w-4 h-4" />
@@ -141,7 +143,7 @@ export const DashboardView: React.FC = () => {
             </span>
           </div>
           <div className="mt-4 text-xs text-[#85818A] font-medium">
-            <span>{stats.analysesRun} ta tahlil o‘tkazildi</span>
+            <span>{t('dashboard.analysesCount', { count: stats.analysesRun })}</span>
           </div>
         </div>
 
@@ -152,7 +154,7 @@ export const DashboardView: React.FC = () => {
         >
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#85818A]">
-              O‘ynalgan o‘yinlar
+              {t('dashboard.gamesPlayedCard')}
             </span>
             <div className="w-8 h-8 rounded-xl bg-[#FFF0F7] flex items-center justify-center text-[#EC008C]">
               <Gamepad2 className="w-4 h-4" />
@@ -164,7 +166,7 @@ export const DashboardView: React.FC = () => {
             </span>
           </div>
           <div className="mt-4 text-xs text-[#85818A] font-medium">
-            <span>{stats.victories} ta g‘alaba</span>
+            <span>{t('dashboard.victoriesCount', { count: stats.victories })}</span>
           </div>
         </div>
 
@@ -175,7 +177,7 @@ export const DashboardView: React.FC = () => {
         >
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#85818A]">
-              Reytingdagi o‘rningiz
+              {t('dashboard.leaderboardCard')}
             </span>
             <div className="w-8 h-8 rounded-xl bg-[#FFF0F7] flex items-center justify-center text-[#EC008C]">
               <Trophy className="w-4 h-4" />
@@ -187,18 +189,18 @@ export const DashboardView: React.FC = () => {
             </span>
           </div>
           <div className="mt-4 text-xs text-[#85818A] font-medium">
-            <span>Pink Coin bo‘yicha</span>
+            <span>{t('dashboard.rankedByCoins')}</span>
           </div>
         </div>
       </div>
 
-      {/* Two Trend Charts Row (Matches Screenshot 6) */}
+      {/* Two Trend Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Essay Score Trend */}
         <div className="bg-white rounded-3xl p-6 border border-[#F5E6EF] shadow-xs flex flex-col justify-between">
           <div>
-            <h3 className="text-base font-bold text-[#242124]">Insho ballari dinamikasi</h3>
-            <p className="text-xs text-[#85818A]">Eng qadimgi tahlildan yangisigacha barcha AI tekshiruvlari.</p>
+            <h3 className="text-base font-bold text-[#242124]">{t('dashboard.essayTrendTitle')}</h3>
+            <p className="text-xs text-[#85818A]">{t('dashboard.essayTrendSubtitle')}</p>
           </div>
 
           <div className="mt-6 h-56 flex items-center justify-center">
@@ -217,7 +219,7 @@ export const DashboardView: React.FC = () => {
                       fontSize: '12px',
                       color: '#242124'
                     }}
-                    formatter={(val: any) => [`${val} ball`, 'Natija']}
+                    formatter={(val: any) => [`${val} ${t('common.ball')}`, t('common.ball')]}
                   />
                   <Line
                     type="monotone"
@@ -233,13 +235,13 @@ export const DashboardView: React.FC = () => {
               <div className="text-center p-6 space-y-2">
                 <TrendingUp className="w-8 h-8 text-[#EC008C] mx-auto opacity-70" />
                 <p className="text-xs text-[#85818A] max-w-xs">
-                  Birinchi AI insho tahlilini o‘tkazing va bu yerda ballar grafigi chiziladi.
+                  {t('dashboard.noScoresYet')}
                 </p>
                 <button
                   onClick={() => setActiveTab('essay-lab')}
                   className="mt-2 text-xs font-bold text-[#EC008C] hover:underline"
                 >
-                  Insho yozishni boshlash →
+                  {t('common.startWriting')} →
                 </button>
               </div>
             )}
@@ -250,11 +252,11 @@ export const DashboardView: React.FC = () => {
         <div className="bg-white rounded-3xl p-6 border border-[#F5E6EF] shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-base font-bold text-[#242124]">Pink Coin to‘plash grafigi</h3>
-              <p className="text-xs text-[#85818A]">Har bir ta'limiy mashqdan keyingi balans o‘sishi.</p>
+              <h3 className="text-base font-bold text-[#242124]">{t('dashboard.coinsOverTimeTitle')}</h3>
+              <p className="text-xs text-[#85818A]">{t('dashboard.coinsOverTimeSubtitle')}</p>
             </div>
             <span className="text-xs font-extrabold text-[#EC008C] bg-[#FFF0F7] px-3 py-1 rounded-full border border-[#FCE7F3]">
-              {user.pinkCoins} hozir
+              {user.pinkCoins} Ⓟ
             </span>
           </div>
 
@@ -278,7 +280,7 @@ export const DashboardView: React.FC = () => {
                     fontSize: '12px',
                     color: '#242124'
                   }}
-                  formatter={(val: any) => [`${val} tanga`, 'Balans']}
+                  formatter={(val: any) => [`${val} ${t('common.coins')}`, t('common.coins')]}
                 />
                 <Area
                   type="monotone"
@@ -294,9 +296,9 @@ export const DashboardView: React.FC = () => {
         </div>
       </div>
 
-      {/* Level Progress & Achievements (Matches Screenshot 7) */}
+      {/* Level Progress & Achievements */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Level 1 Progress Card (8 cols) */}
+        {/* Level Progress Card */}
         <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-7 border border-[#F5E6EF] shadow-xs space-y-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -305,17 +307,17 @@ export const DashboardView: React.FC = () => {
               </div>
               <div>
                 <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#EC008C]">
-                  LEVEL {user.level} · {user.level === 1 ? "Oddiy Qo'y" : user.level === 2 ? "Ijodkor Qo'y" : "Afsonaviy Qo'y"}
+                  {t('common.level')} {user.level} · {user.level === 1 ? t('landing.level1Title') : user.level === 2 ? t('landing.level2Title') : t('landing.level3Title')}
                 </span>
                 <p className="text-xs font-semibold text-[#85818A]">
-                  {user.pinkCoins} tanga to‘plangan
+                  {user.pinkCoins} {t('common.coins')}
                 </p>
               </div>
             </div>
 
             <div className="text-right">
               <span className="text-xs font-bold text-[#85818A]">
-                Keyingi: {user.level === 1 ? "Ijodkor Qo'y" : "Afsonaviy Qo'y"}
+                {language === 'uz' ? 'Keyingi:' : language === 'ru' ? 'Следующий:' : 'Next:'} {user.level === 1 ? t('landing.level2Title') : t('landing.level3Title')}
               </span>
             </div>
           </div>
@@ -323,7 +325,7 @@ export const DashboardView: React.FC = () => {
           {/* Progress bar */}
           <div className="space-y-2">
             <div className="flex justify-between text-xs font-bold">
-              <span className="text-[#242124]">Keyingi darajagacha progress</span>
+              <span className="text-[#242124]">{t('dashboard.progressToNext', { level: user.level === 1 ? t('landing.level2Title') : t('landing.level3Title') })}</span>
               <span className="text-[#EC008C] tabular-nums">{progressPercent}%</span>
             </div>
             <div className="w-full h-3 bg-[#FFF0F7] rounded-full overflow-hidden p-0.5 border border-[#FCE7F3]">
@@ -337,54 +339,54 @@ export const DashboardView: React.FC = () => {
           {/* Metrics needed */}
           <div className="grid grid-cols-2 gap-4 py-2 border-y border-[#FAF0F5]">
             <div>
-              <p className="text-xs text-[#85818A] font-medium">Kerakli Pink Coin</p>
+              <p className="text-xs text-[#85818A] font-medium">{t('dashboard.coinsNeeded')}</p>
               <p className="text-xl font-extrabold text-[#242124] tabular-nums mt-0.5">
                 {coinsNeededForNextLevel}
               </p>
             </div>
             <div>
-              <p className="text-xs text-[#85818A] font-medium">Kerakli insholar soni</p>
+              <p className="text-xs text-[#85818A] font-medium">{t('dashboard.essaysNeeded')}</p>
               <p className="text-xl font-extrabold text-[#242124] tabular-nums mt-0.5">
                 {Math.max(0, 3 - stats.essaysCompleted)}
               </p>
             </div>
           </div>
 
-          {/* Unlocked / Locked Badges Grid */}
+          {/* Badges Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
             <div className="flex items-center gap-2 p-2 rounded-xl bg-[#FFF8FC] border border-[#FCE7F3] text-[11px] text-[#242124] font-medium">
               <CheckCircle2 className="w-3.5 h-3.5 text-[#EC008C] shrink-0" />
-              <span className="truncate">Asosiy AI tahlili</span>
+              <span className="truncate">{t('landing.level1Benefit1')}</span>
             </div>
             <div className="flex items-center gap-2 p-2 rounded-xl bg-[#FFF8FC] border border-[#FCE7F3] text-[11px] text-[#242124] font-medium">
               <CheckCircle2 className="w-3.5 h-3.5 text-[#EC008C] shrink-0" />
-              <span className="truncate">Boshlang‘ich o‘yinlar</span>
+              <span className="truncate">{t('landing.level1Benefit2')}</span>
             </div>
             <div className="flex items-center gap-2 p-2 rounded-xl bg-[#FFF8FC] border border-[#FCE7F3] text-[11px] text-[#242124] font-medium">
               <CheckCircle2 className="w-3.5 h-3.5 text-[#EC008C] shrink-0" />
-              <span className="truncate">Standart profil</span>
+              <span className="truncate">{t('landing.level1Benefit3')}</span>
             </div>
             <div className="flex items-center gap-2 p-2 rounded-xl bg-gray-50 border border-gray-100 text-[11px] text-gray-400 font-medium">
               <Lock className="w-3.5 h-3.5 shrink-0" />
-              <span className="truncate">Kengaytirilgan tahlil</span>
+              <span className="truncate">{t('landing.level2Benefit1')}</span>
             </div>
             <div className="flex items-center gap-2 p-2 rounded-xl bg-gray-50 border border-gray-100 text-[11px] text-gray-400 font-medium">
               <Lock className="w-3.5 h-3.5 shrink-0" />
-              <span className="truncate">Haftalik reyting</span>
+              <span className="truncate">{t('landing.level2Benefit2')}</span>
             </div>
             <div className="flex items-center gap-2 p-2 rounded-xl bg-gray-50 border border-gray-100 text-[11px] text-gray-400 font-medium">
               <Lock className="w-3.5 h-3.5 shrink-0" />
-              <span className="truncate">Neon profil ramkasi</span>
+              <span className="truncate">{t('landing.level3Benefit1')}</span>
             </div>
           </div>
         </div>
 
-        {/* Recent Achievements Card (5 cols) (Matches Screenshot 7) */}
+        {/* Recent Achievements Card */}
         <div className="lg:col-span-5 bg-white rounded-3xl p-6 sm:p-7 border border-[#F5E6EF] shadow-xs flex flex-col justify-between">
           <div>
             <div className="flex items-center gap-2 mb-4">
               <Sparkles className="w-4 h-4 text-[#EC008C]" />
-              <h3 className="text-base font-bold text-[#242124]">So‘nggi yutuqlar</h3>
+              <h3 className="text-base font-bold text-[#242124]">{t('dashboard.recentAchievements')}</h3>
             </div>
 
             <div className="space-y-3">
@@ -429,23 +431,23 @@ export const DashboardView: React.FC = () => {
               onClick={() => setActiveTab('profile')}
               className="text-xs font-bold text-[#EC008C] hover:underline"
             >
-              Barcha yutuqlarni ko‘rish →
+              {t('common.viewAll')} →
             </button>
           </div>
         </div>
       </div>
 
-      {/* Bottom Row: Recent Essay Activity & Keep The Momentum (Matches Screenshot 7) */}
+      {/* Bottom Row: Recent Essay Activity & Keep The Momentum */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Recent essay activity (7 cols) */}
+        {/* Recent essay activity */}
         <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-7 border border-[#F5E6EF] shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-base font-bold text-[#242124]">So‘nggi insholar faolligi</h3>
+            <h3 className="text-base font-bold text-[#242124]">{t('dashboard.recentEssays')}</h3>
             <button
               onClick={() => setActiveTab('essay-history')}
               className="text-xs font-bold text-[#EC008C] hover:underline"
             >
-              Barchasini ko‘rish
+              {t('common.viewAll')}
             </button>
           </div>
 
@@ -459,7 +461,7 @@ export const DashboardView: React.FC = () => {
                 >
                   <div className="space-y-1">
                     <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#EC008C]">
-                      {es.essayType || es.category || 'Akademik'}
+                      {es.essayType || es.category || 'Academic'}
                     </span>
                     <h4 className="text-sm font-bold text-[#242124]">{es.title}</h4>
                     <p className="text-xs text-[#85818A] line-clamp-1">{es.content}</p>
@@ -471,10 +473,10 @@ export const DashboardView: React.FC = () => {
                         <span className="text-sm font-extrabold text-[#EC008C] tabular-nums">
                           {es.score}
                         </span>
-                        <span className="text-[10px] text-[#85818A] block">/ 100 ball</span>
+                        <span className="text-[10px] text-[#85818A] block">{t('common.of100')}</span>
                       </div>
                     ) : (
-                      <span className="text-xs text-[#85818A]">Qoralama</span>
+                      <span className="text-xs text-[#85818A]">Draft</span>
                     )}
                   </div>
                 </div>
@@ -486,24 +488,24 @@ export const DashboardView: React.FC = () => {
                 <PenLine className="w-6 h-6" />
               </div>
               <p className="text-xs text-[#85818A]">
-                Hozircha insholar yo‘q. Qoralamalaringiz va tahlillaringiz shu yerda aks etadi.
+                {t('dashboard.noEssaysDesc')}
               </p>
               <button
                 onClick={() => setActiveTab('essay-lab')}
                 className="px-5 py-2 bg-[#EC008C] text-white text-xs font-bold rounded-full shadow-md"
               >
-                Insho yozishni boshlash
+                {t('common.startWriting')}
               </button>
             </div>
           )}
         </div>
 
-        {/* Keep the Momentum (5 cols) (Matches Screenshot 7) */}
+        {/* Keep the Momentum */}
         <div className="lg:col-span-5 bg-white rounded-3xl p-6 sm:p-7 border border-[#F5E6EF] shadow-xs flex flex-col justify-between">
           <div>
-            <h3 className="text-base font-bold text-[#242124]">Sur'atni saqlang</h3>
+            <h3 className="text-base font-bold text-[#242124]">{t('dashboard.keepMomentum')}</h3>
             <p className="text-xs text-[#85818A] mt-1 leading-relaxed">
-              Kuniga ikki daqiqa lug‘at va jumla mashqi oddiy inshoni xalqaro darajada raqobatbardosh qiladi.
+              {t('dashboard.momentumDesc')}
             </p>
           </div>
 
@@ -514,7 +516,7 @@ export const DashboardView: React.FC = () => {
             >
               <div className="flex items-center gap-2">
                 <PenLine className="w-4 h-4" />
-                <span>Essay Lab'ni ochish</span>
+                <span>{t('dashboard.openLabBtn')}</span>
               </div>
               <ArrowUpRight className="w-4 h-4" />
             </button>
@@ -525,7 +527,7 @@ export const DashboardView: React.FC = () => {
             >
               <div className="flex items-center gap-2">
                 <Gamepad2 className="w-4 h-4 text-[#EC008C]" />
-                <span>Word Wolf o‘ynash</span>
+                <span>{t('dashboard.playWolfBtn')}</span>
               </div>
               <ArrowUpRight className="w-4 h-4 text-[#85818A]" />
             </button>
@@ -536,7 +538,7 @@ export const DashboardView: React.FC = () => {
             >
               <div className="flex items-center gap-2">
                 <BookOpen className="w-4 h-4 text-[#EC008C]" />
-                <span>Insholar tarixini ko‘rish</span>
+                <span>{t('dashboard.viewHistoryBtn')}</span>
               </div>
               <ArrowUpRight className="w-4 h-4 text-[#85818A]" />
             </button>

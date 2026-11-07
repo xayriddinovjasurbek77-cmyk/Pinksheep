@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
+import { useLanguage } from '../../i18n/LanguageContext';
 import { PinkSheepMascot } from '../common/PinkSheepMascot';
 import {
   ArrowLeft,
   Clock,
-  Sparkles,
   CheckCircle2,
   XCircle,
   RotateCcw,
@@ -88,6 +88,7 @@ const QUESTIONS: Question[] = [
 
 export const WordWolfGame: React.FC = () => {
   const { setActiveTab, addCoins, recordGamePlayed } = useApp();
+  const { t, language } = useLanguage();
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [timeLeft, setTimeLeft] = useState(10);
@@ -157,14 +158,14 @@ export const WordWolfGame: React.FC = () => {
 
   return (
     <div className="space-y-6 text-left pb-16">
-      {/* Top Bar (Matches Screenshot 10) */}
+      {/* Top Bar */}
       <div className="flex items-center justify-between">
         <button
           onClick={() => setActiveTab('games')}
           className="inline-flex items-center gap-1.5 text-xs font-bold text-[#85818A] hover:text-[#EC008C] transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Barcha o‘yinlar</span>
+          <span>{t('games.backToGames')}</span>
         </button>
 
         <div className="flex items-center gap-3">
@@ -187,16 +188,20 @@ export const WordWolfGame: React.FC = () => {
 
           <div className="space-y-2">
             <h2 className="text-2xl font-extrabold text-[#242124]">
-              Word Wolf yakunlandi!
+              {language === 'uz' ? 'Word Wolf yakunlandi!' : language === 'ru' ? 'Word Wolf завершён!' : 'Word Wolf Completed!'}
             </h2>
             <p className="text-sm text-[#85818A]">
-              Siz {QUESTIONS.length} ta savoldan {score} tasiga to‘g‘ri javob berdingiz va qo‘zichoqni bo‘ridan himoya qildingiz!
+              {language === 'uz'
+                ? `Siz ${QUESTIONS.length} ta savoldan ${score} tasiga to‘g‘ri javob berdingiz va qo‘zichoqni bo‘ridan himoya qildingiz!`
+                : language === 'ru'
+                ? `Вы ответили правильно на ${score} из ${QUESTIONS.length} вопросов и защитили овечку от волка!`
+                : `You correctly answered ${score} of ${QUESTIONS.length} questions and saved the sheep!`}
             </p>
           </div>
 
           <div className="p-4 rounded-2xl bg-[#FFF8FC] border border-[#FCE7F3] inline-flex items-center gap-4">
-            <span className="text-xs font-bold text-[#85818A]">To‘plangan tangalar:</span>
-            <span className="text-xl font-extrabold text-[#EC008C]">+{earnedCoinsInRun} Pink Coin</span>
+            <span className="text-xs font-bold text-[#85818A]">{t('games.scoreLabel')}</span>
+            <span className="text-xl font-extrabold text-[#EC008C]">+{earnedCoinsInRun} {t('common.coins')}</span>
           </div>
 
           <div className="flex items-center justify-center gap-4 pt-4">
@@ -205,20 +210,20 @@ export const WordWolfGame: React.FC = () => {
               className="inline-flex items-center gap-2 px-6 py-3 bg-[#EC008C] hover:bg-[#d4007d] text-white text-xs font-bold rounded-2xl shadow-md transition-all"
             >
               <RotateCcw className="w-4 h-4" />
-              <span>Qayta o‘ynash</span>
+              <span>{language === 'uz' ? 'Qayta o‘ynash' : language === 'ru' ? 'Сыграть снова' : 'Play Again'}</span>
             </button>
             <button
               onClick={() => setActiveTab('games')}
               className="px-6 py-3 bg-white border border-[#E8E4EC] text-[#242124] text-xs font-bold rounded-2xl hover:bg-neutral-50 transition-all"
             >
-              O‘yinlar menyusi
+              {t('games.backToGames')}
             </button>
           </div>
         </div>
       ) : (
-        /* Main Gameplay Split (Matches Screenshot 10) */
+        /* Main Gameplay Split */
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Left: Duel Arena & Question (8 cols) */}
+          {/* Left: Duel Arena & Question */}
           <div className="lg:col-span-8 space-y-5">
             {/* Sheep & Wolf Arena */}
             <div className="bg-gradient-to-b from-[#FFF5FA] to-white rounded-3xl p-6 sm:p-8 border border-[#FCE7F3] shadow-xs relative overflow-hidden">
@@ -232,7 +237,7 @@ export const WordWolfGame: React.FC = () => {
                   }`}
                 >
                   <Clock className="w-3.5 h-3.5" />
-                  <span>{timeLeft}s — Qo‘zichoqni qutqaring!</span>
+                  <span>{timeLeft}s — {language === 'uz' ? 'Qo‘zichoqni qutqaring!' : language === 'ru' ? 'Спасите овечку!' : 'Save your sheep!'}</span>
                 </div>
               </div>
 
@@ -246,7 +251,7 @@ export const WordWolfGame: React.FC = () => {
                   <div className="w-14 h-14 rounded-full bg-[#242124] flex items-center justify-center text-2xl shadow-md">
                     🐺
                   </div>
-                  <span className="text-[10px] font-bold text-[#85818A] mt-1">So‘z bo‘risi</span>
+                  <span className="text-[10px] font-bold text-[#85818A] mt-1">{language === 'uz' ? 'So‘z bo‘risi' : language === 'ru' ? 'Волк' : 'Word Wolf'}</span>
                 </div>
 
                 {/* Sheep */}
@@ -262,7 +267,7 @@ export const WordWolfGame: React.FC = () => {
               {/* Weak word in sentence prompt */}
               <div className="pt-8 text-center space-y-4">
                 <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#85818A] block">
-                  Oddiy so‘zni kuchli muqobiliga almashtiring
+                  {language === 'uz' ? 'Oddiy so‘zni kuchli muqobiliga almashtiring' : language === 'ru' ? 'Замените слабое слово на академический аналог' : 'Replace the weak word with academic precision'}
                 </span>
 
                 <p className="text-lg sm:text-2xl font-bold text-[#242124] leading-relaxed">
@@ -300,7 +305,7 @@ export const WordWolfGame: React.FC = () => {
                   })}
                 </div>
 
-                {/* Answer Feedback Banner (Matches Screenshot 10) */}
+                {/* Answer Feedback Banner */}
                 {isAnswered && (
                   <div
                     className={`mt-6 p-5 rounded-2xl text-left space-y-3 transition-all ${
@@ -314,14 +319,14 @@ export const WordWolfGame: React.FC = () => {
                         <>
                           <CheckCircle2 className="w-5 h-5 text-emerald-600" />
                           <span className="text-sm font-extrabold text-emerald-800">
-                            Bo‘ri orqaga chekindi! (The wolf retreats!)
+                            {language === 'uz' ? 'Bo‘ri orqaga chekindi!' : language === 'ru' ? 'Волк отступает!' : 'The wolf retreats!'}
                           </span>
                         </>
                       ) : (
                         <>
                           <XCircle className="w-5 h-5 text-red-600" />
                           <span className="text-sm font-extrabold text-red-800">
-                            Vaqt tugadi yoki noto‘g‘ri javob! To‘g‘ri variant: "{currentQ.correctWord}"
+                            {language === 'uz' ? `Noto‘g‘ri! To‘g‘ri variant: "${currentQ.correctWord}"` : language === 'ru' ? `Неверно! Ответ: "${currentQ.correctWord}"` : `Incorrect! Correct option: "${currentQ.correctWord}"`}
                           </span>
                         </>
                       )}
@@ -336,7 +341,7 @@ export const WordWolfGame: React.FC = () => {
                         onClick={handleNextQuestion}
                         className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#EC008C] hover:bg-[#d4007d] text-white text-xs font-bold rounded-xl shadow-md transition-all"
                       >
-                        <span>Keyingi savol</span>
+                        <span>{t('games.nextQuestion')}</span>
                         <ArrowRight className="w-3.5 h-3.5" />
                       </button>
                     </div>
@@ -346,10 +351,10 @@ export const WordWolfGame: React.FC = () => {
             </div>
           </div>
 
-          {/* Right: Info Cards (4 cols) (Matches Screenshot 10) */}
+          {/* Right: Info Cards */}
           <div className="lg:col-span-4 space-y-5">
             <div className="bg-white rounded-3xl p-6 border border-[#F5E6EF] shadow-xs space-y-3">
-              <h3 className="text-sm font-bold text-[#242124]">Nega bu muhim?</h3>
+              <h3 className="text-sm font-bold text-[#242124]">{t('games.whyMatters')}</h3>
               <p className="text-xs text-[#85818A] leading-relaxed">
                 {currentQ.whyItMatters}
               </p>
@@ -357,11 +362,11 @@ export const WordWolfGame: React.FC = () => {
 
             <div className="bg-[#FFF8FC] rounded-3xl p-6 border border-[#FCE7F3] shadow-xs space-y-2">
               <span className="text-[11px] font-extrabold text-[#EC008C] uppercase tracking-wider">
-                Qiyinlik darajasi
+                {t('games.difficulty')}
               </span>
-              <p className="text-xs font-bold text-[#242124]">Oson / Intermediate</p>
+              <p className="text-xs font-bold text-[#242124]">{t('games.difficultyEasy')} / Intermediate</p>
               <p className="text-xs text-[#85818A] pt-1">
-                To‘g‘ri javoblar har bir savol uchun 10 Pink Coin to‘laydi.
+                {language === 'uz' ? 'To‘g‘ri javoblar har bir savol uchun 10 Pink Coin to‘laydi.' : language === 'ru' ? 'Правильные ответы дают 10 Pink Coins за вопрос.' : 'Correct answers pay 10 Pink Coins, once per question.'}
               </p>
             </div>
           </div>

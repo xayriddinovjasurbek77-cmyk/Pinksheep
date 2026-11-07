@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
+import { useLanguage } from '../../i18n/LanguageContext';
 import { EssayItem, EssayAnalysis, EnglishLevel, EssayType } from '../../types';
 import {
   Sparkles,
@@ -29,6 +30,7 @@ export const EssayLabView: React.FC = () => {
     addCoins,
     showNotification
   } = useApp();
+  const { t, language } = useLanguage();
 
   const [currentEssayId, setCurrentEssayId] = useState<string | undefined>(
     essays[0]?.id
@@ -113,7 +115,8 @@ export const EssayLabView: React.FC = () => {
           topic,
           essayType,
           level: targetLevel,
-          content
+          content,
+          uiLang: language
         })
       });
 
@@ -182,47 +185,47 @@ export const EssayLabView: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <span className="text-xs font-extrabold tracking-wider text-[#EC008C] uppercase">
-            Essay Lab
+            {t('nav.essayLab')}
           </span>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-[#242124] tracking-tight">
-            AI Insho Tahlili va Yozish Studiyasi
+            {t('essayLab.title')}
           </h1>
           <p className="text-sm text-[#85818A] mt-0.5">
-            Inshongizni yozing yoki joylashtiring, darajangizni belgilang va 13 mezon bo‘yicha chuqur AI tahlilini oling.
+            {t('essayLab.subtitle')}
           </p>
         </div>
 
         <div className="flex items-center gap-2.5 flex-wrap">
           <button
             onClick={handleNewEssay}
-            className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-white hover:bg-[#FFF8FC] border border-[#E8E4EC] text-[#242124] text-xs font-bold rounded-2xl transition-all shadow-xs"
+            className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-white hover:bg-[#FFF8FC] border border-[#E8E4EC] text-[#242124] text-xs font-bold rounded-2xl transition-all shadow-xs cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>Yangi insho</span>
+            <span>{t('essayLab.newEssayBtn')}</span>
           </button>
 
           <button
             onClick={handleSaveDraft}
-            className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-white hover:bg-[#FFF8FC] border border-[#E8E4EC] text-[#242124] text-xs font-bold rounded-2xl transition-all shadow-xs"
+            className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-white hover:bg-[#FFF8FC] border border-[#E8E4EC] text-[#242124] text-xs font-bold rounded-2xl transition-all shadow-xs cursor-pointer"
           >
             <Save className="w-3.5 h-3.5" />
-            <span>Qoralamani saqlash</span>
+            <span>{t('essayLab.saveDraftBtn')}</span>
           </button>
 
           <button
             onClick={handleAnalyzeEssay}
             disabled={isAnalyzing}
-            className="inline-flex items-center gap-2 px-6 py-2.5 bg-[#EC008C] hover:bg-[#d4007d] disabled:opacity-50 text-white text-xs font-bold rounded-2xl shadow-md shadow-[#EC008C]/25 transition-all active:scale-95"
+            className="inline-flex items-center gap-2 px-6 py-2.5 bg-[#EC008C] hover:bg-[#d4007d] disabled:opacity-50 text-white text-xs font-bold rounded-2xl shadow-md shadow-[#EC008C]/25 transition-all active:scale-95 cursor-pointer"
           >
             {isAnalyzing ? (
               <>
                 <RotateCcw className="w-3.5 h-3.5 animate-spin" />
-                <span>AI tekshirmoqda...</span>
+                <span>{t('essayLab.analyzingBtn')}</span>
               </>
             ) : (
               <>
                 <Sparkles className="w-3.5 h-3.5" />
-                <span>Inshoni tekshirish</span>
+                <span>{t('essayLab.analyzeBtn')}</span>
               </>
             )}
           </button>
@@ -237,25 +240,25 @@ export const EssayLabView: React.FC = () => {
           <div className="bg-white rounded-3xl p-6 border border-[#F5E6EF] shadow-xs space-y-4">
             <div>
               <label className="block text-[11px] font-extrabold text-[#85818A] uppercase tracking-wider mb-1.5">
-                Insho Sarlavhasi (Title)
+                {t('essayLab.essayTitleLabel')}
               </label>
               <input
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="masalan: Why this scholarship matters to me"
+                placeholder={t('essayLab.essayTitlePlaceholder')}
                 className="w-full px-4 py-3 rounded-2xl bg-[#FFF8FC] border border-[#FCE7F3] text-sm font-semibold text-[#242124] placeholder-gray-400 focus:outline-none focus:border-[#EC008C] transition-all"
               />
             </div>
 
             <div>
               <label className="block text-[11px] font-extrabold text-[#85818A] uppercase tracking-wider mb-1.5">
-                Insho Mavzusi yoki Savol (Essay Topic)
+                {t('essayLab.essayTopicLabel')}
               </label>
               <textarea
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
-                placeholder="Insho savolini shu yerga kiriting — AI tahlili mavzuni to‘liq qamrab olishingizni baholaydi..."
+                placeholder={t('essayLab.essayTopicPlaceholder')}
                 rows={2}
                 className="w-full px-4 py-2.5 rounded-2xl bg-[#FFF8FC] border border-[#FCE7F3] text-xs text-[#242124] placeholder-gray-400 focus:outline-none focus:border-[#EC008C] resize-none"
               />
@@ -265,7 +268,7 @@ export const EssayLabView: React.FC = () => {
               {/* Essay Type Selection */}
               <div>
                 <label className="block text-[11px] font-extrabold text-[#85818A] uppercase tracking-wider mb-1.5">
-                  Insho turi
+                  {t('essayLab.essayTypeLabel')}
                 </label>
                 <select
                   value={essayType}
@@ -284,7 +287,7 @@ export const EssayLabView: React.FC = () => {
               {/* English Level Selection: A1 to C2 */}
               <div>
                 <label className="block text-[11px] font-extrabold text-[#85818A] uppercase tracking-wider mb-1.5">
-                  Ingliz tili darajasi
+                  {t('essayLab.targetLevelLabel')}
                 </label>
                 <select
                   value={targetLevel}
@@ -303,14 +306,14 @@ export const EssayLabView: React.FC = () => {
               {/* Live Word Count Indicator */}
               <div>
                 <label className="block text-[11px] font-extrabold text-[#85818A] uppercase tracking-wider mb-1.5">
-                  So‘zlar soni
+                  {t('essayLab.wordCountLabel')}
                 </label>
                 <div className="px-3 py-2.5 rounded-2xl bg-[#FFF8FC] border border-[#FCE7F3] flex items-center justify-between text-xs">
                   <span className="font-bold text-[#242124] tabular-nums">
-                    {wordCount} ta so‘z
+                    {wordCount} {t('common.words')}
                   </span>
                   <span className={`text-[10px] font-extrabold ${isWordCountSufficient ? 'text-emerald-600' : 'text-[#EC008C]'}`}>
-                    {isWordCountSufficient ? 'Yetarli' : 'kamida 30+'}
+                    {isWordCountSufficient ? t('essayLab.sufficientWords') : t('essayLab.needWords')}
                   </span>
                 </div>
               </div>
@@ -321,17 +324,17 @@ export const EssayLabView: React.FC = () => {
           <div className="bg-white rounded-3xl p-6 border border-[#F5E6EF] shadow-xs space-y-2">
             <div className="flex items-center justify-between">
               <label className="text-[11px] font-extrabold text-[#85818A] uppercase tracking-wider">
-                Insho Matni (Essay Text)
+                {t('essayLab.yourEssayLabel')}
               </label>
               <span className="text-xs text-[#85818A]">
-                To‘g‘ridan-to‘g‘ri yozing yoki mavjud matnni joylashtiring.
+                {t('essayLab.notePrivate')}
               </span>
             </div>
 
             <textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              placeholder="Insho matnini shu yerga yozing yoki nusxa ko‘chirib joylashtiring..."
+              placeholder={t('essayLab.essayPlaceholder')}
               rows={16}
               className="w-full p-4 rounded-2xl bg-[#FFF8FC] border border-[#FCE7F3] text-sm text-[#242124] leading-relaxed placeholder-gray-400 focus:outline-none focus:border-[#EC008C] focus:bg-white transition-all font-sans"
             />
@@ -347,9 +350,9 @@ export const EssayLabView: React.FC = () => {
                 <div>
                   <div className="inline-flex items-center gap-1.5 text-[10px] font-extrabold text-[#EC008C] bg-[#FFF0F7] px-2.5 py-0.5 rounded-full border border-[#FCE7F3] mb-1">
                     <Sparkles className="w-3 h-3" />
-                    <span>{analysisResult.isAiPowered ? 'Gemini 3.8 Flash AI tahlili' : 'Akademik rubrika (Demo)'}</span>
+                    <span>{analysisResult.isAiPowered ? 'Gemini 3.8 Flash AI' : t('common.demoNotice')}</span>
                   </div>
-                  <h3 className="text-base font-extrabold text-[#242124]">Tahlil Natijalari</h3>
+                  <h3 className="text-base font-extrabold text-[#242124]">{t('essayLab.resultsTitle')}</h3>
                 </div>
 
                 <div className="flex items-center gap-2 bg-[#FFF0F7] px-4 py-2 rounded-2xl border border-[#FCE7F3]">
@@ -357,7 +360,7 @@ export const EssayLabView: React.FC = () => {
                     {analysisResult.overallScore}
                   </span>
                   <span className="text-[10px] font-bold text-[#85818A] block leading-tight">
-                    / 100<br />ball
+                    {t('common.of100')}
                   </span>
                 </div>
               </div>
@@ -365,13 +368,13 @@ export const EssayLabView: React.FC = () => {
               {/* 5 Rubric Scores Progress Bars (20 points each) */}
               <div className="space-y-2.5">
                 <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#85818A] block">
-                  Mezonlar bo‘yicha ballar (har biri 20 ballgacha)
+                  {t('essayLab.scoresTitle')}
                 </span>
 
                 <div className="space-y-2">
                   <div className="p-2.5 rounded-xl bg-[#FFF8FC] border border-[#FCE7F3]">
                     <div className="flex justify-between text-xs font-bold text-[#242124]">
-                      <span>Grammatika (Grammar)</span>
+                      <span>{t('essayLab.grammar')}</span>
                       <span className="text-[#EC008C]">{analysisResult.scores.grammar} / 20</span>
                     </div>
                     <div className="w-full h-1.5 bg-white rounded-full overflow-hidden mt-1.5 border border-[#FCE7F3]">
@@ -381,7 +384,7 @@ export const EssayLabView: React.FC = () => {
 
                   <div className="p-2.5 rounded-xl bg-[#FFF8FC] border border-[#FCE7F3]">
                     <div className="flex justify-between text-xs font-bold text-[#242124]">
-                      <span>Akademik lug‘at (Vocabulary)</span>
+                      <span>{t('essayLab.vocabulary')}</span>
                       <span className="text-[#EC008C]">{analysisResult.scores.vocabulary} / 20</span>
                     </div>
                     <div className="w-full h-1.5 bg-white rounded-full overflow-hidden mt-1.5 border border-[#FCE7F3]">
@@ -391,7 +394,7 @@ export const EssayLabView: React.FC = () => {
 
                   <div className="p-2.5 rounded-xl bg-[#FFF8FC] border border-[#FCE7F3]">
                     <div className="flex justify-between text-xs font-bold text-[#242124]">
-                      <span>Mantiq va bog‘liqlik (Coherence)</span>
+                      <span>{t('essayLab.coherence')}</span>
                       <span className="text-[#EC008C]">{analysisResult.scores.coherence} / 20</span>
                     </div>
                     <div className="w-full h-1.5 bg-white rounded-full overflow-hidden mt-1.5 border border-[#FCE7F3]">
@@ -401,7 +404,7 @@ export const EssayLabView: React.FC = () => {
 
                   <div className="p-2.5 rounded-xl bg-[#FFF8FC] border border-[#FCE7F3]">
                     <div className="flex justify-between text-xs font-bold text-[#242124]">
-                      <span>Mavzuni to‘liq ochish (Task Achievement)</span>
+                      <span>{t('essayLab.taskAchievement')}</span>
                       <span className="text-[#EC008C]">{analysisResult.scores.taskAchievement} / 20</span>
                     </div>
                     <div className="w-full h-1.5 bg-white rounded-full overflow-hidden mt-1.5 border border-[#FCE7F3]">
@@ -411,7 +414,7 @@ export const EssayLabView: React.FC = () => {
 
                   <div className="p-2.5 rounded-xl bg-[#FFF8FC] border border-[#FCE7F3]">
                     <div className="flex justify-between text-xs font-bold text-[#242124]">
-                      <span>Jumla tuzilmalari (Sentence Structure)</span>
+                      <span>{t('essayLab.sentenceStructure')}</span>
                       <span className="text-[#EC008C]">{analysisResult.scores.sentenceStructure} / 20</span>
                     </div>
                     <div className="w-full h-1.5 bg-white rounded-full overflow-hidden mt-1.5 border border-[#FCE7F3]">
@@ -425,51 +428,51 @@ export const EssayLabView: React.FC = () => {
               <div className="flex rounded-xl bg-[#FFF8FC] p-1 border border-[#FCE7F3] overflow-x-auto gap-1">
                 <button
                   onClick={() => setFeedbackTab('overview')}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all ${
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
                     feedbackTab === 'overview' ? 'bg-[#EC008C] text-white shadow-xs' : 'text-[#85818A] hover:text-[#242124]'
                   }`}
                 >
-                  Umumiy
+                  {t('essayLab.tabOverview')}
                 </button>
                 <button
                   onClick={() => setFeedbackTab('mistakes')}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all ${
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
                     feedbackTab === 'mistakes' ? 'bg-[#EC008C] text-white shadow-xs' : 'text-[#85818A] hover:text-[#242124]'
                   }`}
                 >
-                  Grammatika ({analysisResult.grammarMistakes.length})
+                  {t('essayLab.tabMistakes')} ({analysisResult.grammarMistakes.length})
                 </button>
                 <button
                   onClick={() => setFeedbackTab('vocabulary')}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all ${
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
                     feedbackTab === 'vocabulary' ? 'bg-[#EC008C] text-white shadow-xs' : 'text-[#85818A] hover:text-[#242124]'
                   }`}
                 >
-                  Lug‘at ({analysisResult.vocabularyImprovements.length})
+                  {t('essayLab.tabVocabulary')} ({analysisResult.vocabularyImprovements.length})
                 </button>
                 <button
                   onClick={() => setFeedbackTab('sentences')}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all ${
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
                     feedbackTab === 'sentences' ? 'bg-[#EC008C] text-white shadow-xs' : 'text-[#85818A] hover:text-[#242124]'
                   }`}
                 >
-                  Jumlalar ({analysisResult.weakSentences.length})
+                  {t('essayLab.tabSentences')} ({analysisResult.weakSentences.length})
                 </button>
                 <button
                   onClick={() => setFeedbackTab('plan')}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all ${
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
                     feedbackTab === 'plan' ? 'bg-[#EC008C] text-white shadow-xs' : 'text-[#85818A] hover:text-[#242124]'
                   }`}
                 >
-                  Reja
+                  {t('essayLab.tabPlan')}
                 </button>
                 <button
                   onClick={() => setFeedbackTab('exemplar')}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all ${
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
                     feedbackTab === 'exemplar' ? 'bg-[#EC008C] text-white shadow-xs' : 'text-[#85818A] hover:text-[#242124]'
                   }`}
                 >
-                  Namuna
+                  {t('essayLab.tabExemplar')}
                 </button>
               </div>
 
@@ -478,7 +481,7 @@ export const EssayLabView: React.FC = () => {
                 <div className="space-y-4 text-xs">
                   <div className="p-3.5 rounded-2xl bg-[#FFF8FC] border border-[#FCE7F3]">
                     <span className="font-extrabold text-[#EC008C] uppercase tracking-wider block mb-1">
-                      Umumiy Xulosa
+                      {t('essayLab.overallVerdict')}
                     </span>
                     <p className="text-[#242124] leading-relaxed">
                       {analysisResult.verdict}
@@ -488,7 +491,7 @@ export const EssayLabView: React.FC = () => {
                   <div className="space-y-2">
                     <span className="font-extrabold text-[#242124] flex items-center gap-1.5">
                       <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                      <span>Inshoning kuchli tomonlari:</span>
+                      <span>{t('essayLab.strengthsTitle')}</span>
                     </span>
                     <ul className="space-y-1.5 pl-5 list-disc text-[#85818A]">
                       {analysisResult.strengths.map((s, idx) => (
@@ -500,7 +503,7 @@ export const EssayLabView: React.FC = () => {
                   <div className="space-y-2 pt-1">
                     <span className="font-extrabold text-[#242124] flex items-center gap-1.5">
                       <AlertTriangle className="w-4 h-4 text-amber-600" />
-                      <span>Rivojlantirish kerak bo‘lgan sohalar:</span>
+                      <span>{t('essayLab.weaknessesTitle')}</span>
                     </span>
                     <ul className="space-y-1.5 pl-5 list-disc text-[#85818A]">
                       {analysisResult.areasNeedingImprovement.map((a, idx) => (
@@ -523,21 +526,21 @@ export const EssayLabView: React.FC = () => {
                           </span>
                           <button
                             onClick={() => handleApplyCorrection(gm.original, gm.correction)}
-                            className="text-[10px] font-bold text-[#EC008C] hover:underline"
+                            className="text-[10px] font-bold text-[#EC008C] hover:underline cursor-pointer"
                           >
-                            Matnga tatbiq etish →
+                            {t('essayLab.applyCorrection')}
                           </button>
                         </div>
                         <p className="line-through text-red-600 font-semibold">"{gm.original}"</p>
                         <p className="text-emerald-700 font-bold bg-emerald-50 p-2 rounded-xl">✓ "{gm.correction}"</p>
                         <p className="text-[#85818A] leading-relaxed">
-                          <strong className="text-[#242124]">Tushuntirish:</strong> {gm.explanation}
+                          <strong className="text-[#242124]">{t('essayLab.explanation')}</strong> {gm.explanation}
                         </p>
                       </div>
                     ))
                   ) : (
                     <div className="text-center py-6 text-[#85818A]">
-                      Jiddiy grammatik xatolar aniqlanmadi!
+                      {t('essayLab.noGrammarMistakes')}
                     </div>
                   )}
                 </div>
@@ -550,23 +553,23 @@ export const EssayLabView: React.FC = () => {
                     <div key={idx} className="p-3.5 rounded-2xl bg-[#FFF8FC] border border-[#FCE7F3] space-y-2">
                       <div className="flex items-center justify-between">
                         <span className="font-bold text-[#242124]">
-                          Oddiy so‘z: <span className="text-[#EC008C]">{vi.weakWord}</span>
+                          {t('essayLab.weakWordLabel')} <span className="text-[#EC008C]">{vi.weakWord}</span>
                         </span>
                       </div>
                       <div className="flex flex-wrap gap-1.5 pt-1">
-                        <span className="text-[10px] text-[#85818A] block w-full">Akademik muqobillari:</span>
+                        <span className="text-[10px] text-[#85818A] block w-full">{t('essayLab.academicAlternatives')}</span>
                         {vi.suggestedAlternatives.map((alt, i) => (
                           <button
                             key={i}
                             onClick={() => handleApplyCorrection(vi.weakWord, alt)}
-                            className="px-2 py-1 bg-white hover:bg-[#FFF0F7] border border-[#FCE7F3] text-xs font-bold text-[#EC008C] rounded-lg transition-colors"
+                            className="px-2 py-1 bg-white hover:bg-[#FFF0F7] border border-[#FCE7F3] text-xs font-bold text-[#EC008C] rounded-lg transition-colors cursor-pointer"
                           >
                             + {alt}
                           </button>
                         ))}
                       </div>
                       <p className="text-[#85818A] leading-relaxed pt-1">
-                        <strong className="text-[#242124]">Nega tavsiya etiladi:</strong> {vi.explanation}
+                        <strong className="text-[#242124]">{t('essayLab.whyRecommended')}</strong> {vi.explanation}
                       </p>
                     </div>
                   ))}
@@ -579,12 +582,12 @@ export const EssayLabView: React.FC = () => {
                   {analysisResult.weakSentences.map((ws, idx) => (
                     <div key={idx} className="p-3.5 rounded-2xl bg-[#FFF8FC] border border-[#FCE7F3] space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-extrabold text-[#85818A] uppercase">Zaif jumla</span>
+                        <span className="text-[10px] font-extrabold text-[#85818A] uppercase">{t('essayLab.weakSentenceLabel')}</span>
                         <button
                           onClick={() => handleApplyCorrection(ws.original, ws.improved)}
-                          className="text-[10px] font-bold text-[#EC008C] hover:underline"
+                          className="text-[10px] font-bold text-[#EC008C] hover:underline cursor-pointer"
                         >
-                          Matnga kiritish →
+                          {t('essayLab.applySentence')}
                         </button>
                       </div>
                       <p className="text-red-700 italic bg-red-50/50 p-2 rounded-xl">"{ws.original}"</p>
@@ -592,7 +595,7 @@ export const EssayLabView: React.FC = () => {
                         "{ws.improved}"
                       </p>
                       <p className="text-[#85818A] leading-relaxed">
-                        <strong className="text-[#242124]">Tahlil:</strong> {ws.explanation}
+                        <strong className="text-[#242124]">{t('essayLab.sentenceAnalysis')}</strong> {ws.explanation}
                       </p>
                     </div>
                   ))}
@@ -603,7 +606,7 @@ export const EssayLabView: React.FC = () => {
               {feedbackTab === 'plan' && (
                 <div className="space-y-3 text-xs max-h-96 overflow-y-auto pr-1">
                   <span className="font-extrabold text-[#EC008C] uppercase tracking-wider block">
-                    Shaxsiy Rivojlanish Rejasi (3–5 qadam)
+                    {t('essayLab.planTitle')}
                   </span>
                   {analysisResult.personalizedPlan.map((step) => (
                     <div key={step.step} className="p-3.5 rounded-2xl bg-[#FFF8FC] border border-[#FCE7F3] space-y-1">
@@ -624,14 +627,14 @@ export const EssayLabView: React.FC = () => {
                 <div className="space-y-3 text-xs max-h-96 overflow-y-auto pr-1">
                   <div className="flex items-center justify-between">
                     <span className="font-extrabold text-[#EC008C] uppercase tracking-wider">
-                      Mukammal C1/C2 Namunaviy Insho
+                      {t('essayLab.exemplarTitle')}
                     </span>
                     <button
                       onClick={handleCopyExemplar}
-                      className="inline-flex items-center gap-1 text-xs font-bold text-[#EC008C] hover:underline"
+                      className="inline-flex items-center gap-1 text-xs font-bold text-[#EC008C] hover:underline cursor-pointer"
                     >
                       <Copy className="w-3.5 h-3.5" />
-                      <span>{copied ? 'Nusxalandi!' : 'Nusxa olish'}</span>
+                      <span>{copied ? t('essayLab.exemplarCopied') : t('essayLab.copyExemplar')}</span>
                     </button>
                   </div>
                   <div className="p-4 rounded-2xl bg-[#FFF8FC] border border-[#FCE7F3] text-xs sm:text-sm text-[#242124] leading-relaxed font-serif whitespace-pre-line">
@@ -648,38 +651,38 @@ export const EssayLabView: React.FC = () => {
                   AI Essay Coach
                 </span>
                 <h3 className="text-base font-bold text-[#242124]">
-                  Inshongizni tekshirtirishga tayyormisiz?
+                  {t('essayLab.idleTitle')}
                 </h3>
                 <p className="text-xs text-[#85818A] leading-relaxed">
-                  "Inshoni tekshirish" tugmasini bosing. AI sizning inshongizni 13 ta kategoriya bo‘yicha to‘liq baholaydi va mukammal namuna taqdim etadi.
+                  {t('essayLab.idleDesc')}
                 </p>
               </div>
 
               <div className="p-4 rounded-2xl bg-[#FFF8FC] border border-[#FCE7F3] space-y-2.5">
-                <h4 className="text-xs font-bold text-[#242124]">13 ta tahlil yo‘nalishi:</h4>
+                <h4 className="text-xs font-bold text-[#242124]">{t('essayLab.idleFeaturesTitle')}</h4>
                 <div className="grid grid-cols-1 gap-1.5 text-[11px] text-[#85818A]">
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-3.5 h-3.5 text-[#EC008C]" />
-                    <span>100 ballik CEFR baholash tizimi</span>
+                    <span>{t('essayLab.idleF1')}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-3.5 h-3.5 text-[#EC008C]" />
-                    <span>Grammatika va so‘z xatolarining o‘zbekcha izohi</span>
+                    <span>{t('essayLab.idleF2')}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-3.5 h-3.5 text-[#EC008C]" />
-                    <span>Zaif jumlalarni akademik uslubda kuchaytirish</span>
+                    <span>{t('essayLab.idleF3')}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-3.5 h-3.5 text-[#EC008C]" />
-                    <span>Shaxsiy takomillashtirish rejasi va to‘liq namuna</span>
+                    <span>{t('essayLab.idleF4')}</span>
                   </div>
                 </div>
               </div>
 
               {/* Saved Drafts List */}
               <div className="space-y-3 pt-2">
-                <span className="text-xs font-bold text-[#242124]">Oxirgi saqlangan insholar:</span>
+                <span className="text-xs font-bold text-[#242124]">{t('essayLab.savedDraftsTitle')}</span>
                 <div className="space-y-2">
                   {essays.slice(0, 3).map((item) => (
                     <div
@@ -694,7 +697,7 @@ export const EssayLabView: React.FC = () => {
                       <div className="flex items-center justify-between">
                         <span className="font-bold text-[#242124] truncate">{item.title}</span>
                         {item.score && (
-                          <span className="font-extrabold text-[#EC008C]">{item.score} ball</span>
+                          <span className="font-extrabold text-[#EC008C]">{item.score} {t('common.ball')}</span>
                         )}
                       </div>
                       <p className="text-[10px] text-[#85818A] truncate mt-0.5">{item.topic || item.content}</p>

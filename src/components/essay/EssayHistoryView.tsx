@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
-import { BookOpen, PenLine, Sparkles, Calendar, ChevronRight, CheckCircle2 } from 'lucide-react';
+import { useLanguage } from '../../i18n/LanguageContext';
+import { BookOpen, PenLine, Calendar, ChevronRight } from 'lucide-react';
 
 export const EssayHistoryView: React.FC = () => {
   const { essays, setActiveTab } = useApp();
+  const { t } = useLanguage();
   const [filterCategory, setFilterCategory] = useState<string>('All');
 
   const filtered = essays.filter(
@@ -16,13 +18,13 @@ export const EssayHistoryView: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <span className="text-xs font-extrabold tracking-wider text-[#EC008C] uppercase">
-            Insholar tarixi
+            {t('essayHistory.title')}
           </span>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-[#242124] tracking-tight">
-            Yozilgan insholaringiz to‘plami
+            {t('essayHistory.title')}
           </h1>
           <p className="text-sm text-[#85818A] mt-0.5">
-            Barcha qoralamalar, AI tahlillari va baholangan ishlar arxivi.
+            {t('essayHistory.subtitle')}
           </p>
         </div>
 
@@ -31,7 +33,7 @@ export const EssayHistoryView: React.FC = () => {
           className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#EC008C] hover:bg-[#d4007d] text-white text-xs font-bold rounded-2xl shadow-md shadow-[#EC008C]/25 transition-all self-start md:self-auto"
         >
           <PenLine className="w-3.5 h-3.5" />
-          <span>Yangi insho yozish</span>
+          <span>{t('essayHistory.writeNew')}</span>
         </button>
       </div>
 
@@ -47,7 +49,7 @@ export const EssayHistoryView: React.FC = () => {
                 : 'bg-white border border-[#E8E4EC] text-[#85818A] hover:bg-[#FFF8FC] hover:text-[#242124]'
             }`}
           >
-            {cat === 'All' ? 'Barchasi' : cat}
+            {cat === 'All' ? t('essayHistory.filterAll') : cat}
           </button>
         ))}
       </div>
@@ -64,16 +66,16 @@ export const EssayHistoryView: React.FC = () => {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#EC008C] bg-[#FFF0F7] px-2.5 py-1 rounded-md border border-[#FCE7F3]">
-                    {essay.essayType || essay.category || 'Akademik'}
+                    {essay.essayType || essay.category || 'Academic'}
                   </span>
                   {essay.score ? (
                     <div className="px-3 py-1 bg-[#FFF0F7] rounded-xl border border-[#FCE7F3] text-right">
                       <span className="text-xs font-extrabold text-[#EC008C] tabular-nums">
-                        {essay.score} / 100 ball
+                        {essay.score} {t('common.of100')}
                       </span>
                     </div>
                   ) : (
-                    <span className="text-xs text-[#85818A]">Qoralama</span>
+                    <span className="text-xs text-[#85818A]">{t('essayHistory.draft')}</span>
                   )}
                 </div>
 
@@ -91,11 +93,11 @@ export const EssayHistoryView: React.FC = () => {
                   <Calendar className="w-3.5 h-3.5" />
                   <span>{new Date(essay.updatedAt).toLocaleDateString()}</span>
                   <span>·</span>
-                  <span>{essay.wordCount} so‘z</span>
+                  <span>{essay.wordCount} {t('common.words')}</span>
                 </div>
 
                 <span className="font-bold text-[#EC008C] flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                  <span>Ochish</span>
+                  <span>{t('essayLab.viewDraft')}</span>
                   <ChevronRight className="w-3.5 h-3.5" />
                 </span>
               </div>
@@ -105,9 +107,9 @@ export const EssayHistoryView: React.FC = () => {
       ) : (
         <div className="bg-white rounded-3xl p-12 border border-[#F5E6EF] text-center max-w-md mx-auto space-y-3">
           <BookOpen className="w-12 h-12 text-[#EC008C] mx-auto opacity-70" />
-          <h3 className="text-base font-bold text-[#242124]">Insholar topilmadi</h3>
+          <h3 className="text-base font-bold text-[#242124]">{t('essayHistory.empty')}</h3>
           <p className="text-xs text-[#85818A]">
-            Bu kategoriyada hali insholar mavjud emas. Yangi insho yozishni boshlang!
+            {t('essayHistory.emptyDesc')}
           </p>
         </div>
       )}

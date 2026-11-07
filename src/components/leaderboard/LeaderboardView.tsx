@@ -1,29 +1,30 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
+import { useLanguage } from '../../i18n/LanguageContext';
 import { PinkSheepMascot } from '../common/PinkSheepMascot';
-import { Trophy, Medal, Award, Flame, Sparkles } from 'lucide-react';
 
 export const LeaderboardView: React.FC = () => {
   const { leaderboard, user } = useApp();
+  const { t } = useLanguage();
 
   const currentUserRank = leaderboard.find(u => u.id === user.id)?.rank || 1;
 
   return (
     <div className="space-y-8 text-left pb-16">
-      {/* Header Bar (Matches Screenshot 14) */}
+      {/* Header Bar */}
       <div>
         <span className="text-xs font-extrabold tracking-wider text-[#EC008C] uppercase">
-          Reyting
+          {t('nav.leaderboard')}
         </span>
         <h1 className="text-2xl sm:text-3xl font-extrabold text-[#242124] tracking-tight">
-          Pink Coin bo‘yicha reyting
+          {t('leaderboard.title')}
         </h1>
         <p className="text-sm text-[#85818A] mt-0.5">
-          Faqat haqiqiy ta'limiy faoliyat tanga beradi — tahlil qilingan insholar va g‘alaba qozonilgan o‘yinlar. Reytinglar avtomatik qayta hisoblanadi.
+          {t('leaderboard.subtitle')}
         </p>
       </div>
 
-      {/* Your Position Pink Banner (Matches Screenshot 14) */}
+      {/* Your Position Pink Banner */}
       <div className="bg-gradient-to-r from-[#EC008C] to-[#FF4DA6] text-white rounded-3xl p-5 sm:p-6 shadow-xl shadow-[#EC008C]/25 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-md shrink-0">
@@ -32,7 +33,7 @@ export const LeaderboardView: React.FC = () => {
 
           <div>
             <span className="text-[10px] font-extrabold uppercase tracking-wider text-white/80 block">
-              Sizning o‘rningiz
+              {t('leaderboard.yourRank', { rank: currentUserRank })}
             </span>
             <div className="flex items-center gap-2 mt-0.5">
               <h2 className="text-lg sm:text-xl font-extrabold text-white">
@@ -47,30 +48,30 @@ export const LeaderboardView: React.FC = () => {
 
         <div className="flex items-center gap-4 self-end sm:self-auto">
           <div className="text-right">
-            <span className="text-xs text-white/80 block font-semibold">To‘plangan</span>
+            <span className="text-xs text-white/80 block font-semibold">{t('leaderboard.colCoins')}</span>
             <span className="text-lg font-black text-white tabular-nums">
               {user.pinkCoins} Ⓟ
             </span>
           </div>
 
           <div className="px-3 py-1.5 rounded-full bg-white/20 text-white text-xs font-bold uppercase tracking-wider backdrop-blur-xs">
-            Level {user.level}
+            {t('common.level')} {user.level}
           </div>
         </div>
       </div>
 
-      {/* Leaderboard Table (Matches Screenshot 14) */}
+      {/* Leaderboard Table */}
       <div className="bg-white rounded-3xl border border-[#F5E6EF] shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
             <thead className="bg-[#FFF8FC] border-b border-[#FAF0F5] text-[11px] font-extrabold text-[#85818A] uppercase tracking-wider">
               <tr>
-                <th className="py-4 px-6">O‘rin</th>
-                <th className="py-4 px-6">Yozuvchi</th>
-                <th className="py-4 px-6">Daraja</th>
-                <th className="py-4 px-6">Pink Coin</th>
-                <th className="py-4 px-6">Insholar</th>
-                <th className="py-4 px-6">G‘alabalar</th>
+                <th className="py-4 px-6">{t('leaderboard.colRank')}</th>
+                <th className="py-4 px-6">{t('leaderboard.colStudent')}</th>
+                <th className="py-4 px-6">{t('leaderboard.colLevel')}</th>
+                <th className="py-4 px-6">{t('leaderboard.colCoins')}</th>
+                <th className="py-4 px-6">{t('leaderboard.colEssays')}</th>
+                <th className="py-4 px-6">{t('leaderboard.colWins')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#FAF0F5]">
@@ -113,7 +114,7 @@ export const LeaderboardView: React.FC = () => {
                         <PinkSheepMascot avatarId={writer.avatarId} size="xs" />
                         <div>
                           <p className={`font-bold ${isCurrentUser ? 'text-[#EC008C]' : 'text-[#242124]'}`}>
-                            {writer.username}
+                            {writer.username} {isCurrentUser && `(${t('leaderboard.you')})`}
                           </p>
                           <div className="flex items-center gap-1.5 mt-0.5">
                             <span
@@ -122,7 +123,7 @@ export const LeaderboardView: React.FC = () => {
                               }`}
                             />
                             <span className="text-[10px] text-[#85818A]">
-                              {writer.isOnline ? 'Online' : 'Offline'}
+                              {writer.isOnline ? t('common.online') : t('common.offline')}
                             </span>
                           </div>
                         </div>
@@ -132,7 +133,7 @@ export const LeaderboardView: React.FC = () => {
                     {/* Level Badge */}
                     <td className="py-4 px-6 whitespace-nowrap">
                       <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-[#FFF0F7] text-[#EC008C] border border-[#FCE7F3]">
-                        Level {writer.level}
+                        {t('common.level')} {writer.level}
                       </span>
                     </td>
 

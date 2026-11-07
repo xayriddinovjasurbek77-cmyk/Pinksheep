@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { AppProvider, useApp } from './context/AppContext';
+import { LanguageProvider } from './i18n/LanguageContext';
+import { LanguageSwitcher } from './components/common/LanguageSwitcher';
 import { Sidebar } from './components/common/Sidebar';
 import { LandingPage } from './components/landing/LandingPage';
 import { DashboardView } from './components/dashboard/DashboardView';
@@ -77,7 +79,8 @@ const AppContent: React.FC = () => {
             <PinkSheepLogo onClick={() => setActiveTab('dashboard')} />
           </div>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2">
+            <LanguageSwitcher variant="compact" />
             <button
               onClick={() => setActiveTab('pink-coins')}
               className="flex items-center gap-1 px-3 py-1 bg-[#FFF0F7] rounded-full border border-[#FCE7F3] text-xs font-bold text-[#EC008C]"
@@ -128,8 +131,10 @@ const AppContent: React.FC = () => {
 
 export default function App() {
   return (
-    <AppProvider>
-      <AppContent />
-    </AppProvider>
+    <LanguageProvider>
+      <AppProvider>
+        <AppContent />
+      </AppProvider>
+    </LanguageProvider>
   );
 }
